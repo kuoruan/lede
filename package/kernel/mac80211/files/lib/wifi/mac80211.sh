@@ -77,7 +77,7 @@ detect_mac80211() {
 		[ "$found" -gt 0 ] && continue
 
 		mode_band="g"
-		channel="11"
+		channel="auto"
 		htmode=""
 		ht_capab=""
 
@@ -88,7 +88,7 @@ detect_mac80211() {
 		cap_5ghz=$(iw phy "$dev" info | grep -c "Band 2")
 		[ "$vht_cap" -gt 0 -a "$cap_5ghz" -gt 0 ] && {
 			mode_band="a";
-			channel="36"
+			channel="auto"
 			htmode="VHT80"
 		}
 
@@ -109,6 +109,9 @@ detect_mac80211() {
 			dev_id="	option macaddr	$(cat /sys/class/ieee80211/${dev}/macaddress)"
 		fi
 
+		[ "$mode_band" = "a" ] && ssid_hz="5GHz" || ssid_hz="2.4GHz"
+		ssid_subfix=$(cat /sys/class/ieee80211/${dev}/macaddress | awk -F ":" '{print $4""$5""$6 }' | tr a-z A-Z)
+
 		cat <<EOF
 config wifi-device  radio$devidx
 	option type     mac80211
@@ -116,14 +119,14 @@ config wifi-device  radio$devidx
 	option hwmode	11${mode_band}
 $dev_id
 $ht_capab
-	# REMOVE THIS LINE TO ENABLE WIFI:
-	option disabled 1
+	option disabled 0
+	option noscan	1
 
 config wifi-iface
 	option device   radio$devidx
 	option network  lan
 	option mode     ap
-	option ssid     LEDE
+	option ssid     LEDE-${ssid_hz}-${ssid_subfix}
 	option encryption none
 
 EOF
