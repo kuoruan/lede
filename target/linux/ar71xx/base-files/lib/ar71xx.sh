@@ -470,6 +470,9 @@ ar71xx_board_detect() {
 	*AP83)
 		name="ap83"
 		;;
+	*AP90Q)
+		name="ap90q"
+		;;
 	*"Archer C5")
 		name="archer-c5"
 		;;
@@ -481,6 +484,9 @@ ar71xx_board_detect() {
 		;;
 	*AW-NR580)
 		name="aw-nr580"
+		;;
+	*BHR-4GRV2)
+		name="bhr-4grv2"
 		;;
 	*CAP324)
 		name="cap324"
@@ -494,8 +500,23 @@ ar71xx_board_detect() {
 	*CAP4200AG)
 		name="cap4200ag"
 		;;
-	*"COMFAST CF-E316N v2")
+	*"CF-E316N v2")
 		name="cf-e316n-v2"
+		;;
+	*"CF-E320N v2")
+		name="cf-e320n-v2"
+		;;
+	*"CF-E380AC v1")
+		name="cf-e380ac-v1"
+		;;
+	*"CF-E380AC v2")
+		name="cf-e380ac-v2"
+		;;
+	*CF-E520N)
+		name="cf-e520n"
+		;;
+	*CF-E530N)
+		name="cf-e530n"
 		;;
 	*"CPE210/220")
 		name="cpe210"
@@ -504,6 +525,12 @@ ar71xx_board_detect() {
 	*"CPE510/520")
 		name="cpe510"
 		tplink_pharos_board_detect
+		;;
+	*CPE830)
+		name="cpe830"
+		;;
+	*CPE870)
+		name="cpe870"
 		;;
 	*CR3000)
 		name="cr3000"
