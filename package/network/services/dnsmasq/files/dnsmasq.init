@@ -598,6 +598,7 @@ dnsmasq_start()
 	append_parm "$cfg" "tftp_root" "--tftp-root"
 	append_parm "$cfg" "dhcp_boot" "--dhcp-boot"
 	append_parm "$cfg" "local_ttl" "--local-ttl"
+	append_parm "$cfg" "fil_iplist" "--filter-iplist"
 	append_parm "$cfg" "pxe_prompt" "--pxe-prompt"
 	config_list_foreach "$cfg" "pxe_service" append_pxe_service
 	config_get DOMAIN "$cfg" domain
