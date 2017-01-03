@@ -81,14 +81,14 @@ detect_mac80211() {
 		htmode=""
 		ht_capab=""
 
-		iw phy "$dev" info | grep -q 'Capabilities:' && htmode=HT20
-		iw phy "$dev" info | grep -q '2412 MHz' || { mode_band="a"; channel="36"; }
+		iw phy "$dev" info | grep -q 'Capabilities:' && htmode=HT40
+		iw phy "$dev" info | grep -q '2412 MHz' || { mode_band="a"; channel="157"; }
 
 		vht_cap=$(iw phy "$dev" info | grep -c 'VHT Capabilities')
 		cap_5ghz=$(iw phy "$dev" info | grep -c "Band 2")
 		[ "$vht_cap" -gt 0 -a "$cap_5ghz" -gt 0 ] && {
 			mode_band="a";
-			channel="auto"
+			channel="157"
 			htmode="VHT80"
 		}
 
@@ -121,6 +121,7 @@ detect_mac80211() {
 			${ht_capab}
 			set wireless.radio${devidx}.disabled=0
 			set wireless.radio${devidx}.noscan=1
+			set wireless.radio${devidx}.country=CN
 
 			set wireless.default_radio${devidx}=wifi-iface
 			set wireless.default_radio${devidx}.device=radio${devidx}
