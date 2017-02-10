@@ -30,7 +30,7 @@ $(eval $(call KernelPackage,6lowpan))
 define KernelPackage/bluetooth
   SUBMENU:=$(OTHER_MENU)
   TITLE:=Bluetooth support
-  DEPENDS:=@USB_SUPPORT +kmod-usb-core +kmod-crypto-hash +kmod-crypto-ecb +kmod-lib-crc16 +kmod-hid +!LINUX_3_18:kmod-crypto-cmac +LINUX_4_4:kmod-regmap
+  DEPENDS:=@USB_SUPPORT +kmod-usb-core +kmod-crypto-hash +kmod-crypto-ecb +kmod-lib-crc16 +kmod-hid +!LINUX_3_18:kmod-crypto-cmac +!LINUX_3_18:kmod-regmap
   KCONFIG:= \
 	CONFIG_BLUEZ \
 	CONFIG_BLUEZ_L2CAP \
@@ -114,22 +114,6 @@ endef
 $(eval $(call KernelPackage,bluetooth_6lowpan))
 
 
-define KernelPackage/bluetooth-hci-h4p
-  SUBMENU:=$(OTHER_MENU)
-  TITLE:=HCI driver with H4 Nokia extensions
-  DEPENDS:=@TARGET_omap24xx +kmod-bluetooth
-  KCONFIG:=CONFIG_BT_HCIH4P
-  FILES:=$(LINUX_DIR)/drivers/bluetooth/hci_h4p/hci_h4p.ko
-  AUTOLOAD:=$(call AutoProbe,hci_h4p)
-endef
-
-define KernelPackage/bluetooth-hci-h4p/description
- HCI driver with H4 Nokia extensions
-endef
-
-$(eval $(call KernelPackage,bluetooth-hci-h4p))
-
-
 define KernelPackage/dma-buf
   SUBMENU:=$(OTHER_MENU)
   TITLE:=DMA shared buffer support
@@ -140,6 +124,20 @@ define KernelPackage/dma-buf
 endef
 $(eval $(call KernelPackage,dma-buf))
 
+
+define KernelPackage/nvmem
+  SUBMENU:=$(OTHER_MENU)
+  TITLE:=Non Volatile Memory support
+  KCONFIG:=CONFIG_NVMEM
+  HIDDEN:=1
+  FILES:=$(LINUX_DIR)/drivers/nvmem/nvmem_core.ko@ge4.9
+endef
+
+define KernelPackage/nvmem/description
+  Support for NVMEM(Non Volatile Memory) devices like EEPROM, EFUSES, etc.
+endef
+
+$(eval $(call KernelPackage,nvmem))
 
 define KernelPackage/eeprom-93cx6
   SUBMENU:=$(OTHER_MENU)
@@ -160,7 +158,7 @@ define KernelPackage/eeprom-at24
   SUBMENU:=$(OTHER_MENU)
   TITLE:=EEPROM AT24 support
   KCONFIG:=CONFIG_EEPROM_AT24
-  DEPENDS:=+kmod-i2c-core
+  DEPENDS:=+kmod-i2c-core +kmod-nvmem
   FILES:=$(LINUX_DIR)/drivers/misc/eeprom/at24.ko
   AUTOLOAD:=$(call AutoProbe,at24)
 endef
@@ -176,6 +174,7 @@ define KernelPackage/eeprom-at25
   SUBMENU:=$(OTHER_MENU)
   TITLE:=EEPROM AT25 support
   KCONFIG:=CONFIG_EEPROM_AT25
+  DEPENDS:=+kmod-nvmem
   FILES:=$(LINUX_DIR)/drivers/misc/eeprom/at25.ko
   AUTOLOAD:=$(call AutoProbe,at25)
 endef
@@ -482,22 +481,6 @@ endef
 $(eval $(call KernelPackage,bcma))
 
 
-define KernelPackage/wdt-omap
-  SUBMENU:=$(OTHER_MENU)
-  TITLE:=OMAP Watchdog timer
-  DEPENDS:=@(TARGET_omap24xx||TARGET_omap35xx)
-  KCONFIG:=CONFIG_OMAP_WATCHDOG
-  FILES:=$(LINUX_DIR)/drivers/$(WATCHDOG_DIR)/omap_wdt.ko
-  AUTOLOAD:=$(call AutoLoad,50,omap_wdt,1)
-endef
-
-define KernelPackage/wdt-omap/description
- Kernel module for TI omap watchdog timer
-endef
-
-$(eval $(call KernelPackage,wdt-omap))
-
-
 define KernelPackage/rtc-ds1307
   SUBMENU:=$(OTHER_MENU)
   TITLE:=Dallas/Maxim DS1307 (and compatible) RTC support
@@ -617,22 +600,6 @@ define KernelPackage/rtc-pt7c4338/description
 endef
 
 $(eval $(call KernelPackage,rtc-pt7c4338))
-
-define KernelPackage/rtc-snvs
-  SUBMENU:=$(OTHER_MENU)
-  TITLE:=Freescale SNVS RTC support
-  DEPENDS:=@TARGET_imx6 @RTC_SUPPORT
-  KCONFIG:=CONFIG_RTC_DRV_SNVS \
-	CONFIG_RTC_CLASS=y
-  FILES:=$(LINUX_DIR)/drivers/rtc/rtc-snvs.ko
-  AUTOLOAD:=$(call AutoLoad,50,rtc-snvs,1)
-endef
-
-define KernelPackage/rtc-snvs/description
- Kernel module for Freescale SNVS RTC on chip module
-endef
-
-$(eval $(call KernelPackage,rtc-snvs))
 
 define KernelPackage/rtc-rs5c372a
   SUBMENU:=$(OTHER_MENU)
@@ -833,7 +800,7 @@ $(eval $(call KernelPackage,ptp))
 define KernelPackage/ptp-gianfar
   SUBMENU:=$(OTHER_MENU)
   TITLE:=Freescale Gianfar PTP support
-  DEPENDS:=@TARGET_mpc85xx +kmod-gianfar +kmod-ptp
+  DEPENDS:=@TARGET_mpc85xx +kmod-ptp
   KCONFIG:=CONFIG_PTP_1588_CLOCK_GIANFAR
   FILES:=$(LINUX_DIR)/drivers/net/ethernet/freescale/gianfar_ptp.ko
   AUTOLOAD:=$(call AutoProbe,gianfar_ptp)
@@ -865,7 +832,7 @@ define KernelPackage/random-omap
   TITLE:=Hardware Random Number Generator OMAP support
   KCONFIG:=CONFIG_HW_RANDOM_OMAP
   FILES:=$(LINUX_DIR)/drivers/char/hw_random/omap-rng.ko
-  DEPENDS:=@(TARGET_omap24xx||TARGET_omap) +kmod-random-core
+  DEPENDS:=@TARGET_omap24xx +kmod-random-core
   AUTOLOAD:=$(call AutoProbe,random-omap)
 endef
 
@@ -904,26 +871,6 @@ define KernelPackage/thermal/description
 endef
 
 $(eval $(call KernelPackage,thermal))
-
-
-define KernelPackage/thermal-imx
-  SUBMENU:=$(OTHER_MENU)
-  TITLE:=Temperature sensor driver for Freescale i.MX SoCs
-  DEPENDS:=@TARGET_imx6 +kmod-thermal
-  KCONFIG:= \
-	CONFIG_IMX_THERMAL
-  FILES:=$(LINUX_DIR)/drivers/thermal/imx_thermal.ko
-  AUTOLOAD:=$(call AutoProbe,imx_thermal)
-endef
-
-define KernelPackage/thermal-imx/description
- Support for Temperature Monitor (TEMPMON) found on Freescale i.MX SoCs.
- It supports one critical trip point and one passive trip point. The
- cpufreq is used as the cooling device to throttle CPUs when the
- passive trip is crossed.
-endef
-
-$(eval $(call KernelPackage,thermal-imx))
 
 
 define KernelPackage/gpio-beeper

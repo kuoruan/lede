@@ -193,7 +193,6 @@ define Device/ubnt-air-gateway-pro
   BOARDNAME := UBNT-AGWP
   UBNT_TYPE := AirGWP
   UBNT_CHIP := ar934x
-  CONSOLE = ttyS0,115200
 endef
 TARGET_DEVICES += ubnt-air-gateway-pro
 
@@ -223,7 +222,7 @@ define Device/ubnt-rs
 $(Device/ubnt-routerstation)
   DEVICE_TITLE := Ubiquiti RouterStation
   BOARDNAME := UBNT-RS
-  DEVICE_PROFILE := Madwifi UBNT UBNTRS
+  DEVICE_PROFILE := UBNT UBNTRS
   UBNT_BOARD := RS
   UBNT_TYPE := RSx
   UBNT_CHIP := ar7100
@@ -233,7 +232,7 @@ define Device/ubnt-rspro
 $(Device/ubnt-routerstation)
   DEVICE_TITLE := Ubiquiti RouterStation Pro
   BOARDNAME := UBNT-RSPRO
-  DEVICE_PROFILE := Madwifi UBNT UBNTRSPRO
+  DEVICE_PROFILE := UBNT UBNTRSPRO
   UBNT_BOARD := RSPRO
   UBNT_TYPE := RSPRO
   UBNT_CHIP := ar7100pro
@@ -243,7 +242,7 @@ define Device/ubnt-ls-sr71
 $(Device/ubnt-routerstation)
   DEVICE_TITLE := Ubiquiti LS-SR71
   BOARDNAME := UBNT-LS-SR71
-  DEVICE_PROFILE := Madwifi UBNT
+  DEVICE_PROFILE := UBNT
   UBNT_BOARD := LS-SR71
   UBNT_TYPE := LS-SR71
   UBNT_CHIP := ar7100

@@ -27,7 +27,7 @@ define KernelPackage/crypto-aead
 	CONFIG_CRYPTO_AEAD2
   FILES:=$(LINUX_DIR)/crypto/aead.ko
   AUTOLOAD:=$(call AutoLoad,09,aead,1)
-  $(call AddDepends/crypto, +LINUX_4_4:kmod-crypto-null)
+  $(call AddDepends/crypto, +!LINUX_3_18:kmod-crypto-null)
 endef
 
 $(eval $(call KernelPackage,crypto-aead))
@@ -124,9 +124,10 @@ define KernelPackage/crypto-iv
   TITLE:=CryptoAPI initialization vectors
   DEPENDS:=+kmod-crypto-manager +kmod-crypto-rng +kmod-crypto-wq
   KCONFIG:= CONFIG_CRYPTO_BLKCIPHER2
+  HIDDEN:=1
   FILES:= \
-	$(LINUX_DIR)/crypto/eseqiv.ko \
-	$(LINUX_DIR)/crypto/chainiv.ko
+	$(LINUX_DIR)/crypto/eseqiv.ko@lt4.9 \
+	$(LINUX_DIR)/crypto/chainiv.ko@lt4.9
   AUTOLOAD:=$(call AutoLoad,10,eseqiv chainiv)
   $(call AddDepends/crypto)
 endef
@@ -156,32 +157,6 @@ define KernelPackage/crypto-seqiv
 endef
 
 $(eval $(call KernelPackage,crypto-seqiv))
-
-
-define KernelPackage/crypto-hw-caam
-  TITLE:=Freescale CAAM driver (SEC4)
-  DEPENDS:=@TARGET_imx6||TARGET_mpc85xx +kmod-crypto-aead +kmod-crypto-authenc +kmod-crypto-hash +kmod-random-core
-  KCONFIG:= \
-	CONFIG_CRYPTO_HW=y \
-	CONFIG_CRYPTO_DEV_FSL_CAAM \
-	CONFIG_CRYPTO_DEV_FSL_CAAM_JR \
-	CONFIG_CRYPTO_DEV_FSL_CAAM_CRYPTO_API \
-	CONFIG_CRYPTO_DEV_FSL_CAAM_AHASH_API \
-	CONFIG_CRYPTO_DEV_FSL_CAAM_RNG_API \
-	CONFIG_CRYPTO_DEV_FSL_CAAM_RINGSIZE=9 \
-	CONFIG_CRYPTO_DEV_FSL_CAAM_INTC=n \
-	CONFIG_CRYPTO_DEV_FSL_CAAM_DEBUG=n
-  FILES:= \
-	$(LINUX_DIR)/drivers/crypto/caam/caam.ko \
-	$(LINUX_DIR)/drivers/crypto/caam/caamalg.ko \
-	$(LINUX_DIR)/drivers/crypto/caam/caamhash.ko \
-	$(LINUX_DIR)/drivers/crypto/caam/caam_jr.ko \
-	$(LINUX_DIR)/drivers/crypto/caam/caamrng.ko
-  AUTOLOAD:=$(call AutoLoad,09,caam caamalg caamhash caam_jr caamrng)
-  $(call AddDepends/crypto)
-endef
-
-$(eval $(call KernelPackage,crypto-hw-caam))
 
 
 define KernelPackage/crypto-hw-talitos
@@ -221,7 +196,7 @@ $(eval $(call KernelPackage,crypto-hw-padlock))
 
 define KernelPackage/crypto-hw-ccp
   TITLE:=AMD Cryptographic Coprocessor
-  DEPENDS:=+kmod-crypto-authenc +kmod-crypto-hash +kmod-crypto-manager +kmod-random-core
+  DEPENDS:=+kmod-crypto-authenc +kmod-crypto-hash +kmod-crypto-manager +kmod-random-core +kmod-crypto-sha1 +kmod-crypto-sha256
   KCONFIG:= \
 	CONFIG_CRYPTO_HW=y \
 	CONFIG_CRYPTO_DEV_CCP=y \
@@ -266,57 +241,9 @@ endef
 $(eval $(call KernelPackage,crypto-hw-hifn-795x))
 
 
-define KernelPackage/crypto-hw-ppc4xx
-  TITLE:=AMCC PPC4xx hardware crypto module
-  DEPENDS:=@TARGET_ppc40x||TARGET_ppc44x
-  KCONFIG:= \
-	CONFIG_CRYPTO_HW=y \
-	CONFIG_CRYPTO_DEV_PPC4XX
-  FILES:=$(LINUX_DIR)/drivers/crypto/amcc/crypto4xx.ko
-  AUTOLOAD:=$(call AutoLoad,90,crypto4xx)
-  $(call AddDepends/crypto,+kmod-crypto-manager +kmod-crypto-hash)
-endef
-
-define KernelPackage/crypto-hw-ppc4xx/description
-  Kernel support for the AMCC PPC4xx HW crypto engine.
-endef
-
-$(eval $(call KernelPackage,crypto-hw-ppc4xx))
-
-
-define KernelPackage/crypto-hw-omap
-  TITLE:=TI OMAP hardware crypto modules
-  DEPENDS:=@TARGET_omap
-  KCONFIG:= \
-	CONFIG_CRYPTO_HW=y \
-	CONFIG_CRYPTO_DEV_OMAP_AES \
-	CONFIG_CRYPTO_DEV_OMAP_DES \
-	CONFIG_CRYPTO_DEV_OMAP_SHAM
-ifneq ($(wildcard $(LINUX_DIR)/drivers/crypto/omap-des.ko),)
-  FILES:= \
-	$(LINUX_DIR)/drivers/crypto/omap-aes.ko \
-	$(LINUX_DIR)/drivers/crypto/omap-des.ko \
-	$(LINUX_DIR)/drivers/crypto/omap-sham.ko
-  AUTOLOAD:=$(call AutoLoad,90,omap-aes omap-des omap-sham)
-else
-  FILES:= \
-	$(LINUX_DIR)/drivers/crypto/omap-aes.ko \
-	$(LINUX_DIR)/drivers/crypto/omap-sham.ko
-  AUTOLOAD:=$(call AutoLoad,90,omap-aes omap-sham)
-endif
-  $(call AddDepends/crypto,+kmod-crypto-manager +kmod-crypto-hash)
-endef
-
-define KernelPackage/crypto-hw-omap/description
-  Kernel support for the TI OMAP HW crypto engine.
-endef
-
-$(eval $(call KernelPackage,crypto-hw-omap))
-
-
 define KernelPackage/crypto-authenc
   TITLE:=Combined mode wrapper for IPsec
-  DEPENDS:=+kmod-crypto-manager +LINUX_4_4:kmod-crypto-null
+  DEPENDS:=+kmod-crypto-manager +!LINUX_3_18:kmod-crypto-null
   KCONFIG:=CONFIG_CRYPTO_AUTHENC
   FILES:=$(LINUX_DIR)/crypto/authenc.ko
   AUTOLOAD:=$(call AutoLoad,09,authenc)
