@@ -53,6 +53,7 @@ platform_check_image() {
 	dwr-512-b|\
 	e1700|\
 	esr-9753|\
+	ew1200|\
 	ex2700|\
 	f7c027|\
 	firewrt|\
@@ -62,6 +63,7 @@ platform_check_image() {
 	gl-mt300n|\
 	gl-mt750|\
 	hc5*61|\
+	hc5661a|\
 	hg255d|\
 	hlk-rm04|\
 	hpm|\
@@ -227,6 +229,10 @@ platform_check_image() {
 		}
 		return 0
 		;;
+	hc5962)
+		# these boards use metadata images
+		return 0
+		;;
 	ubnt-erx)
 		nand_do_platform_check "$board" "$1"
 		return $?;
@@ -259,6 +265,7 @@ platform_pre_upgrade() {
 	local board=$(ramips_board_name)
 
 	case "$board" in
+	hc5962|\
     	ubnt-erx)
 		nand_do_upgrade "$ARGV"
 		;;

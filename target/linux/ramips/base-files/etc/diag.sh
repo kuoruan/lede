@@ -88,6 +88,7 @@ get_status_led() {
 		status_led="$board:blue:wlan"
 		;;
 	atp-52b|\
+	ew1200|\
 	ip2202)
 		status_led="$board:green:run"
 		;;
@@ -140,11 +141,15 @@ get_status_led() {
 		status_led="$board:orange:status"
 		;;
 	hc5*61|\
+	hc5661a|\
 	jhr-n805r|\
 	jhr-n926r|\
 	mlw221|\
 	mlwg2)
 		status_led="$board:blue:system"
+		;;
+	hc5962)
+		status_led="$board:white:status"
 		;;
 	linkits7688| \
 	linkits7688d)

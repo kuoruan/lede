@@ -19,6 +19,7 @@ board_config_update
 case $board in
 11acnas|\
 all0239-3g|\
+ew1200|\
 hw550-3g|\
 mofi3500-3gn|\
 sap-g3200u3|\
@@ -181,7 +182,8 @@ gl-mt300n|\
 gl-mt750)
 	set_wifi_led "$board:wlan"
 	;;
-hc5661)
+hc5661|\
+hc5661a)
 	ucidef_set_led_default "system" "system" "$board:blue:system" "1"
 	ucidef_set_led_netdev "internet" "internet" "$board:blue:internet" "eth0.2"
 	set_wifi_led "$board:blue:wlan2g"
