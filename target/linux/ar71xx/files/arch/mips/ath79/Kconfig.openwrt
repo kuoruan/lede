@@ -183,6 +183,18 @@ config ATH79_MACH_AP152
 	select ATH79_DEV_WMAC
 	select ATH79_DEV_AP9X_PCI if PCI
 
+config ATH79_MACH_AP531B0
+	bool "Rockeetech AP531B0 support"
+	select SOC_QCA953X
+	select ATH79_DEV_AP9X_PCI if PCI
+	select ATH79_DEV_ETH
+	select ATH79_DEV_GPIO_BUTTONS
+	select ATH79_DEV_LEDS_GPIO
+	select ATH79_DEV_M25P80
+	select ATH79_DEV_SPI
+	select ATH79_DEV_USB
+	select ATH79_DEV_WMAC
+
 config ATH79_MACH_AP90Q
 	bool "YunCore AP90Q support"
 	select SOC_QCA953X
@@ -916,6 +928,7 @@ config ATH79_MACH_RB2011
 
 config ATH79_MACH_RBSPI
 	bool "MikroTik RouterBOARD SPI-NOR support"
+	select SOC_AR934X
 	select SOC_QCA953X
 	select ATH79_DEV_ETH
 	select ATH79_DEV_GPIO_BUTTONS
@@ -931,6 +944,7 @@ config ATH79_MACH_RBSPI
 	  MikroTik RouterBOARD hAP
 	  MikroTik RouterBOARD hEX PoE lite
 	  MikroTik RouterBOARD hEX lite
+	  MikroTik RouterBOARD LHG 5
 	  MikroTik RouterBOARD cAP (EXPERIMENTAL)
 	  MikroTik RouterBOARD mAP (EXPERIMENTAL)
 	  MikroTik RouterBOARD wAP (EXPERIMENTAL)

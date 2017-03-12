@@ -31,6 +31,7 @@ get_status_led() {
 		status_led="$board:green:system"
 		;;
 	ap132|\
+	ap531b0|\
 	db120|\
 	dr344|\
 	tew-632brp|\
@@ -305,6 +306,7 @@ get_status_led() {
 	rb-912uag-5hpnd|\
 	rb-941-2nd|\
 	rb-951ui-2nd|\
+	rb-lhg-5nd|\
 	rb-mapl-2nd)
 		status_led="rb:green:user"
 		;;
