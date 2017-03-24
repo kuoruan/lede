@@ -508,6 +508,9 @@ ar71xx_board_detect() {
 		name="cpe210"
 		tplink_pharos_board_detect
 		;;
+	*"CPE505N")
+		name="cpe505n"
+		;;
 	*"CPE510/520")
 		name="cpe510"
 		tplink_pharos_board_detect
@@ -802,6 +805,9 @@ ar71xx_board_detect() {
 	*"Qihoo 360 C301")
 		name="qihoo-c301"
 		;;
+	*"R602N")
+		name="r602n"
+		;;
 	*"R6100")
 		name="r6100"
 		;;
@@ -904,6 +910,12 @@ ar71xx_board_detect() {
 		;;
 	*"RouterBOARD 951Ui-2nD")
 		name="rb-951ui-2nd"
+		;;
+	*"RouterBOARD 952Ui-5ac2nD")
+		name="rb-952ui-5ac2nd"
+		;;
+	*"RouterBOARD 962UiGS-5HacT2HnT")
+		name="rb-962uigs-5hact2hnt"
 		;;
 	*"RouterBOARD LHG 5nD")
 		name="rb-lhg-5nd"
@@ -1093,6 +1105,12 @@ ar71xx_board_detect() {
 		;;
 	*"TL-WR810N")
 		name="tl-wr810n"
+		;;
+	*"TL-WR840N v2")
+		name="tl-wr840n-v2"
+		;;
+	*"TL-WR840N v3")
+		name="tl-wr840n-v3"
 		;;
 	*"TL-WR841N v1")
 		name="tl-wr841n-v1"

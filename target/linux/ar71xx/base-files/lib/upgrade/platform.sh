@@ -217,6 +217,7 @@ platform_check_image() {
 	cf-e380ac-v2|\
 	cf-e520n|\
 	cf-e530n|\
+	cpe505n|\
 	cpe830|\
 	cpe870|\
 	dgl-5500-a1|\
@@ -256,6 +257,7 @@ platform_check_image() {
 	nanostation-m|\
 	nbg460n_550n_550nh|\
 	pqi-air-pen|\
+	r602n|\
 	rocket-m-ti|\
 	rocket-m-xw|\
 	rocket-m|\
@@ -428,6 +430,8 @@ platform_check_image() {
 	tl-wr802n-v1|\
 	tl-wr802n-v2|\
 	tl-wr810n|\
+	tl-wr840n-v2|\
+	tl-wr840n-v3|\
 	tl-wr841n-v11|\
 	tl-wr841n-v1|\
 	tl-wr841n-v7|\
@@ -638,6 +642,8 @@ platform_check_image() {
 	rb-750up-r2|\
 	rb-941-2nd|\
 	rb-951ui-2nd|\
+	rb-952ui-5ac2nd|\
+	rb-962uigs-5hact2hnt|\
 	rb-lhg-5nd|\
 	rb-mapl-2nd)
 		return 0
@@ -690,6 +696,8 @@ platform_pre_upgrade() {
 	rb-750up-r2|\
 	rb-941-2nd|\
 	rb-951ui-2nd|\
+	rb-952ui-5ac2nd|\
+	rb-962uigs-5hact2hnt|\
 	rb-lhg-5nd|\
 	rb-mapl-2nd)
 		# erase firmware if booted from initramfs
