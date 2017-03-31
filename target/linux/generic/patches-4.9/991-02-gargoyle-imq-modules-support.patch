@@ -1,10 +1,65 @@
 --- a/drivers/net/imq.c
 +++ b/drivers/net/imq.c
-@@ -761,8 +761,325 @@
+@@ -42,55 +42,6 @@
+ 
+ static nf_hookfn imq_nf_hook;
+ 
+-static struct nf_hook_ops imq_ops[] = {
+-	{
+-	/* imq_ingress_ipv4 */
+-		.hook		= imq_nf_hook,
+-		.pf		= PF_INET,
+-		.hooknum	= NF_INET_PRE_ROUTING,
+-#if defined(CONFIG_IMQ_BEHAVIOR_BA) || defined(CONFIG_IMQ_BEHAVIOR_BB)
+-		.priority	= NF_IP_PRI_MANGLE + 1,
+-#else
+-		.priority	= NF_IP_PRI_NAT_DST + 1,
+-#endif
+-	},
+-	{
+-	/* imq_egress_ipv4 */
+-		.hook		= imq_nf_hook,
+-		.pf		= PF_INET,
+-		.hooknum	= NF_INET_POST_ROUTING,
+-#if defined(CONFIG_IMQ_BEHAVIOR_AA) || defined(CONFIG_IMQ_BEHAVIOR_BA)
+-		.priority	= NF_IP_PRI_LAST,
+-#else
+-		.priority	= NF_IP_PRI_NAT_SRC - 1,
+-#endif
+-	},
+-#if defined(CONFIG_IPV6) || defined(CONFIG_IPV6_MODULE)
+-	{
+-	/* imq_ingress_ipv6 */
+-		.hook		= imq_nf_hook,
+-		.pf		= PF_INET6,
+-		.hooknum	= NF_INET_PRE_ROUTING,
+-#if defined(CONFIG_IMQ_BEHAVIOR_BA) || defined(CONFIG_IMQ_BEHAVIOR_BB)
+-		.priority	= NF_IP6_PRI_MANGLE + 1,
+-#else
+-		.priority	= NF_IP6_PRI_NAT_DST + 1,
+-#endif
+-	},
+-	{
+-	/* imq_egress_ipv6 */
+-		.hook		= imq_nf_hook,
+-		.pf		= PF_INET6,
+-		.hooknum	= NF_INET_POST_ROUTING,
+-#if defined(CONFIG_IMQ_BEHAVIOR_AA) || defined(CONFIG_IMQ_BEHAVIOR_BA)
+-		.priority	= NF_IP6_PRI_LAST,
+-#else
+-		.priority	= NF_IP6_PRI_NAT_SRC - 1,
+-#endif
+-	},
+-#endif
+-};
+-
+ #if defined(CONFIG_IMQ_NUM_DEVS)
+ static int numdevs = CONFIG_IMQ_NUM_DEVS;
+ #else
+@@ -761,17 +712,319 @@
  	.outfn = imq_nf_queue,
  };
  
-+// Add by Gargoyle QoS
 +static inline char *kernel_strdup(const char *str)
 +{
 +	char *tmp;
@@ -89,7 +144,7 @@
 +			while (separator_found == 0)
 +			{
 +				int sep_index;
-+				for (sep_index = 0; separator_found == 0 && sep_index < num_separators; sep_index++)
++				for (sep_index = 0; separator_found == 0 && sep_index < num_separators; sep_index ++)
 +				{
 +					separator_found = separators[sep_index] == start[first_separator_index] || start[first_separator_index] == '\0' ? 1 : 0;
 +				}
@@ -125,7 +180,7 @@
 +			{
 +				int matches = 0;
 +				int sep_index;
-+				for (sep_index =0; sep_index < num_separators; sep_index++)
++				for (sep_index =0; sep_index < num_separators; sep_index ++)
 +				{
 +					matches = matches == 1 || separators[sep_index] == start[0] ? 1 : 0;
 +				}
@@ -179,27 +234,30 @@
 +
 +static struct nf_hook_ops* hook_list = NULL;
 +static int hook_list_length = 0;
-+// End Add
 +
  static int __init imq_init_hooks(void)
  {
-+	// Add by Gargoyle QoS
+-	int ret;
 +	char separators[4] = {',', ' ', '\t', '\0' };
 +	unsigned long num_chains;
 +	unsigned long num_tables;
 +	char** chain_list = split_on_separators(hook_chains, separators, 3, -1, 0, &num_chains);
 +	char** table_list = split_on_separators(hook_tables, separators, 3, -1, 0, &num_tables);
 +	int hook_index;
-+
-+	nf_register_queue_imq_handler(&imq_nfqh);
-+
+ 
+ 	nf_register_queue_imq_handler(&imq_nfqh);
+ 
+-	ret = nf_register_hooks(imq_ops, ARRAY_SIZE(imq_ops));
+-	if (ret < 0)
+-		nf_unregister_queue_imq_handler();
 +	hook_list_length = 0;
 +	if (num_chains != num_tables)
 +	{
 +		printk("ERROR: must have same number of chains and tables\n");
 +		return -1;
 +	}
-+
+ 
+-	return ret;
 +	/* we multiply by 2 here since we need hooks for both IPv4 and IPv6 */
 +	hook_list = (struct nf_hook_ops*) kmalloc(sizeof(struct nf_hook_ops) * ((num_chains * 2) + 1), GFP_ATOMIC);
 +
@@ -250,7 +308,7 @@
 +					chain_id = NF_INET_LOCAL_OUT;
 +				}
 +
-+				if(strcmp(table, "mangle") == 0)
++				if (strcmp(table, "mangle") == 0)
 +				{
 +					table_id = NF_IP_PRI_MANGLE+1;
 +				}
@@ -301,7 +359,7 @@
 +					hook_list_length ++;
 +				#endif
 +
-+				if(err)
++				if (err)
 +				{
 +					printk(KERN_INFO "\tError hooking IMQ after %s on %s\n", table, chain);
 +				}
@@ -320,52 +378,37 @@
 +	free_null_terminated_string_array(table_list);
 +
 +	return 0;
-+	// End Add
-+
-+	/*
- 	int ret;
- 
- 	nf_register_queue_imq_handler(&imq_nfqh);
-@@ -772,6 +1089,7 @@
- 		nf_unregister_queue_imq_handler();
- 
- 	return ret;
-+	*/
  }
  
  static int __init imq_init_one(int index)
-@@ -874,8 +1192,18 @@
+@@ -874,8 +1127,16 @@
  
  static void __exit imq_unhook(void)
  {
 -	nf_unregister_hooks(imq_ops, ARRAY_SIZE(imq_ops));
-+	// Add by Gargoyle QoS
-+	for(int hook_index = 0; hook_index < hook_list_length; hook_index++)
++	int hook_index;
++	for (hook_index = 0; hook_index < hook_list_length; hook_index ++)
 +	{
 +		nf_unregister_hook( (hook_list + hook_index) );
 +	}
 +
-+	// nf_unregister_hooks(imq_ops, ARRAY_SIZE(imq_ops));
  	nf_unregister_queue_imq_handler();
 +
 +	kfree(hook_list);
 +	hook_list_length = 0;
-+	// End Add
  }
  
  static void __exit imq_cleanup_devs(void)
-@@ -897,9 +1225,16 @@
+@@ -897,9 +1158,14 @@
  module_param(numdevs, int, 0);
  module_param(numqueues, int, 0);
  module_param(imq_dev_accurate_stats, int, 0);
-+// Add by Gargoyle QoS
 +module_param(hook_chains, charp, 0);
 +module_param(hook_tables, charp, 0);
 +
  MODULE_PARM_DESC(numdevs, "number of IMQ devices (how many imq* devices will be created)");
  MODULE_PARM_DESC(numqueues, "number of queues per IMQ device");
  MODULE_PARM_DESC(imq_dev_accurate_stats, "Notify if need the accurate imq device stats");
-+// Add by Gargoyle QoS
 +MODULE_PARM_DESC(hook_chains, "netfilter chains in which to insert hooks to IMQ");
 +MODULE_PARM_DESC(hook_tables, "netfilter tables after which to insert hooks to IMQ");
  
