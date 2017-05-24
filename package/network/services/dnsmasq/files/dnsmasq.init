@@ -142,6 +142,10 @@ append_pxe_service() {
 	xappend "--pxe-service=$1"
 }
 
+append_interface_name() {
+	xappend "--interface-name=$1,$2"
+}
+
 filter_dnsmasq() {
 	local cfg="$1" func="$2" match_cfg="$3" found_cfg
 
@@ -252,7 +256,7 @@ dhcp_match_add() {
 
 dhcp_host_add() {
 	local cfg="$1"
-	local hosttag nametime addrs
+	local hosttag nametime addrs duids
 
 	config_get_bool force "$cfg" force 0
 
@@ -333,14 +337,14 @@ dhcp_this_host_add() {
 		if [ "$mode" -gt 1 ] ; then
 			if [ "$mode" -gt 2 ] ; then
 				if [ "$mode" -gt 3 ] ; then
-					xappend "--interface-name=$ifdashname.$routername.$DOMAIN,$ifname"
+					append_interface_name "$ifdashname.$routername.$DOMAIN" "$ifname"
 				fi
 
-				xappend "--interface-name=$routername.$DOMAIN,$ifname"
+				append_interface_name "$routername.$DOMAIN" "$ifname"
 			fi
 
 			# All IP addresses discovered by dnsmasq will be labeled (except fe80::)
-			xappend "--interface-name=$routername,$ifname"
+			append_interface_name "$routername" "$ifname"
 
 		else
 			# This uses a static host file entry for only limited addresses.
@@ -466,6 +470,9 @@ dhcp_add() {
 	config_get ra "$cfg" ra
 	config_get ra_management "$cfg" ra_management
 	config_get ra_preference "$cfg" ra_preference
+	config_get dns "$cfg" dns
+
+	config_list_foreach "$cfg" "interface_name" append_interface_name "$ifname"
 
 	# Put the router host name on this DHCP served interface address(es)
 	dhcp_this_host_add "$net" "$ifname" "$ADD_LOCAL_FQDN"
@@ -533,6 +540,15 @@ dhcp_add() {
 			xappend "--dhcp-range=$nettag$dhcp6range,constructor:$ifname,slaac,ra-names,$leasetime"
 			;;
 		esac
+
+		if [ -n "$dns" ]; then
+			dnss=""
+			for d in $dns; do append dnss "[$d]" ","; done
+		else
+			dnss="[::]"
+		fi
+
+		dhcp_option_append "option6:dns-server,$dnss" "$networkid"
 	fi
 
 	dhcp_option_add "$cfg" "$networkid"
