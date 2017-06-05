@@ -14,6 +14,9 @@ try_version() {
 try_git() {
 	REBOOT=ee53a240ac902dc83209008a2671e7fdcf55957a
 	git rev-parse --git-dir >/dev/null 2>&1 || return 1
+	if ! (git cat-file -e ${REBOOT} 2>&1); then
+		$REBOOT="$(git rev-list --max-parents=0 HEAD)"
+	fi
 
 	[ -n "$GET_REV" ] || GET_REV="HEAD"
 
