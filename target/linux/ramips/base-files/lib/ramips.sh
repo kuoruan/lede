@@ -472,6 +472,9 @@ ramips_board_detect() {
 	*"SL-R7205"*)
 		name="sl-r7205"
 		;;
+	*"TEW-638APB v2")
+		name="tew-638apb-v2"
+		;;
 	*"TEW-691GR")
 		name="tew-691gr"
 		;;
@@ -486,6 +489,9 @@ ramips_board_detect() {
 		;;
 	*"UBNT-ERX")
 		name="ubnt-erx"
+		;;
+	*"UBNT-ERX-SFP")
+		name="ubnt-erx-sfp"
 		;;
 	*"UR-326N4G")
 		name="ur-326n4g"
