@@ -224,10 +224,11 @@ proto_pppoe_setup() {
 	json_get_var host_uniq host_uniq
 
 	#By GuoGuo: prepare for shellsync
-	if [ "$(uci get syncdial.config.enabled)" = "1" ]; then
-		ppp_if_cnt=$(cat /etc/config/network | grep -c "proto 'pppoe'")
-		syncppp_option="syncppp $ppp_if_cnt"
-		shellsync $ppp_if_cnt 10
+	local ppp_if_cnt syncppp_option
+	if [ "$(uci -q get syncdial.config.enabled)" = "1" ]; then
+		ppp_if_cnt=$(grep -c "proto 'pppoe'" /etc/config/network)
+		syncppp_option="syncppp ${ppp_if_cnt}"
+		shellsync $ppp_if_cnt 10 2>/dev/null
 	fi
 
 	ppp_generic_setup "$config" \
