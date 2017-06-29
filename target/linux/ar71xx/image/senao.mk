@@ -8,7 +8,11 @@ define Build/senao-factory-image
 	$(CP) $(IMAGE_KERNEL) $@.senao/openwrt-senao-$(board)-uImage-lzma.bin
 	$(CP) $(rootfs) $@.senao/openwrt-senao-$(board)-root.squashfs
 
-	$(TAR) -czf $@ -C $@.senao .
+	$(TAR) -c \
+		--numeric-owner --owner=0 --group=0 --sort=name \
+		$(if $(SOURCE_DATE_EPOCH),--mtime="@$(SOURCE_DATE_EPOCH)") \
+		-C $@.senao . | gzip -9nc > $@
+
 	rm -rf $@.senao
 endef
 
