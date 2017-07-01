@@ -77,18 +77,18 @@ detect_mac80211() {
 		[ "$found" -gt 0 ] && continue
 
 		mode_band="g"
-		channel="auto"
+		channel="11"
 		htmode=""
 		ht_capab=""
 
-		iw phy "$dev" info | grep -q 'Capabilities:' && htmode=HT40
+		iw phy "$dev" info | grep -q 'Capabilities:' && htmode=HT20
 		iw phy "$dev" info | grep -q '2412 MHz' || { mode_band="a"; channel="36"; }
 
 		vht_cap=$(iw phy "$dev" info | grep -c 'VHT Capabilities')
 		cap_5ghz=$(iw phy "$dev" info | grep -c "Band 2")
 		[ "$vht_cap" -gt 0 -a "$cap_5ghz" -gt 0 ] && {
 			mode_band="a";
-			channel="auto"
+			channel="36"
 			htmode="VHT80"
 		}
 
@@ -110,7 +110,7 @@ detect_mac80211() {
 		fi
 
 		[ "$mode_band" = "a" ] && ssid_hz="5GHz" || ssid_hz="2.4GHz"
-		ssid_subfix=$(cat /sys/class/ieee80211/${dev}/macaddress | awk -F ":" '{print $4""$5""$6 }' | tr a-z A-Z)
+		ssid_suffix="$(cat /sys/class/ieee80211/${dev}/macaddress | awk -F ':' '{print $4""$5""$6 }' | tr a-z A-Z)"
 
 		uci -q batch <<-EOF
 			set wireless.radio${devidx}=wifi-device
@@ -127,7 +127,7 @@ detect_mac80211() {
 			set wireless.default_radio${devidx}.device=radio${devidx}
 			set wireless.default_radio${devidx}.network=lan
 			set wireless.default_radio${devidx}.mode=ap
-			set wireless.default_radio${devidx}.ssid=LEDE-${ssid_hz}-${ssid_subfix}
+			set wireless.default_radio${devidx}.ssid=LEDE-${ssid_hz}-${ssid_suffix}
 			set wireless.default_radio${devidx}.encryption=none
 EOF
 		uci -q commit wireless
