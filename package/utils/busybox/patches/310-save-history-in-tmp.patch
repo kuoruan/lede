@@ -1,0 +1,12 @@
+--- a/shell/ash.c
++++ b/shell/ash.c
+@@ -13531,7 +13531,7 @@
+ 		if (iflag) {
+ 			const char *hp = lookupvar("HISTFILE");
+ 			if (!hp) {
+-				hp = lookupvar("HOME");
++				hp = "/tmp";
+ 				if (hp) {
+ 					hp = concat_path_file(hp, ".ash_history");
+ 					setvar0("HISTFILE", hp);
+
