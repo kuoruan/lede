@@ -63,6 +63,7 @@ archer-c25-v1)
 	ucidef_set_led_switch "lan3" "LAN3" "$board:green:lan3" "switch0" "0x04"
 	ucidef_set_led_switch "lan4" "LAN4" "$board:green:lan4" "switch0" "0x02"
 	;;
+archer-c58-v1|\
 archer-c59-v1|\
 archer-c60-v1)
 	ucidef_set_led_switch "lan" "LAN" "$board:green:lan" "switch0" "0x1E"
@@ -748,6 +749,11 @@ tl-wr802n-v1)
 	;;
 tl-wr802n-v2)
 	ucidef_set_led_wlan "wlan" "WLAN" "$board:green:system" "phy0tpt"
+	;;
+tl-wr902ac-v1)
+	ucidef_set_led_netdev "wan" "WAN" "$board:green:lan" "eth0"
+	ucidef_set_led_usbdev "usb" "USB" "$board:green:usb" "1-1"
+	ucidef_set_led_wlan "wlan2g" "WLAN2G" "$board:green:wlan2g" "phy1tpt"
 	;;
 tl-wr940n-v4|\
 tl-wr941nd-v6)
