@@ -441,6 +441,8 @@ ifeq ($(CONFIG_EXTERNAL_TOOLCHAIN),)
 	$(CP) \
 		$(PKG_BUILD_DIR)/libuClibc-* \
 		$(1)/lib/
+	$(LN) libuClibc-$(LIBC_SO_VERSION).so $(1)/lib/libdl.so.0
+	$(LN) libuClibc-$(LIBC_SO_VERSION).so $(1)/lib/libpthread.so.0
   endef
 
   LD_MUSL_NAME = $(notdir $(firstword $(wildcard $(TOOLCHAIN_DIR)/lib/libc.so*)))
