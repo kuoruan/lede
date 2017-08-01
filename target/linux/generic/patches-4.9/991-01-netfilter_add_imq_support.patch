@@ -1064,7 +1064,7 @@
 +
 --- a/include/linux/netdevice.h
 +++ b/include/linux/netdevice.h
-@@ -3691,6 +3691,19 @@ static inline void netif_tx_unlock_bh(struct net_device *dev)
+@@ -3692,6 +3692,19 @@ static inline void netif_tx_unlock_bh(struct net_device *dev)
  	}						\
  }
  
@@ -1255,7 +1255,7 @@
  
  #include "net-sysfs.h"
  
-@@ -2928,7 +2931,12 @@ static int xmit_one(struct sk_buff *skb, struct net_device *dev,
+@@ -2929,7 +2932,12 @@ static int xmit_one(struct sk_buff *skb, struct net_device *dev,
  	unsigned int len;
  	int rc;
  
@@ -1268,7 +1268,7 @@
  		dev_queue_xmit_nit(skb, dev);
  
  #ifdef CONFIG_ETHERNET_PACKET_MANGLE
-@@ -2977,6 +2985,8 @@ struct sk_buff *dev_hard_start_xmit(struct sk_buff *first, struct net_device *de
+@@ -2978,6 +2986,8 @@ struct sk_buff *dev_hard_start_xmit(struct sk_buff *first, struct net_device *de
  	return skb;
  }
  
@@ -1407,7 +1407,7 @@
  
  	/* Note : this field could be in headers_start/headers_end section
  	 * It is not yet because we do not want to have a 16 bit hole
-@@ -3480,6 +3587,13 @@ void __init skb_init(void)
+@@ -3490,6 +3597,13 @@ void __init skb_init(void)
  						0,
  						SLAB_HWCACHE_ALIGN|SLAB_PANIC,
  						NULL);
