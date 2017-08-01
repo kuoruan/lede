@@ -99,7 +99,7 @@
  #ifdef HAVE_DNSSEC
    hash = hash_questions(header, n, daemon->namebuff);
  #else
-@@ -1090,8 +1095,15 @@ void reply_query(int fd, int family, tim
+@@ -1089,8 +1094,15 @@ void reply_query(int fd, int family, tim
        
        if ((nn = process_reply(header, now, forward->sentto, (size_t)n, check_rebind, no_cache_dnssec, cache_secure, bogusanswer, 
  			      forward->flags & FREC_AD_QUESTION, forward->flags & FREC_DO_QUESTION, 
@@ -116,7 +116,7 @@
  	  header->id = htons(forward->orig_id);
  	  header->hb4 |= HB4_RA; /* recursion if available */
  #ifdef HAVE_DNSSEC
-@@ -1963,7 +1975,7 @@ unsigned char *tcp_request(int confd, ti
+@@ -1962,7 +1974,7 @@ unsigned char *tcp_request(int confd, ti
  
  		      m = process_reply(header, now, last_server, (unsigned int)m, 
  					option_bool(OPT_NO_REBIND) && !norebind, no_cache_dnssec, cache_secure, bogusanswer,
