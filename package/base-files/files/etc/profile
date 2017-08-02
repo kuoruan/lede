@@ -10,6 +10,7 @@ export PATH="%PATH%"
 export HOME=$(grep -e "^${USER:-root}:" /etc/passwd | cut -d ":" -f 6)
 export HOME=${HOME:-/root}
 export PS1='\u@\h:\w\$ '
+export LANG="zh_CN.UTF-8"
 
 [ "$TERM" = "xterm" ] && export PS1='\[\e]0;\u@\h: \w\a\]'$PS1
 
