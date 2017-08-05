@@ -76,14 +76,8 @@ ramips_board_detect() {
 	*"AWM002 EVB (8M)")
 		name="awm002-evb-8M"
 		;;
-	*"AWM003 EVB")
-		name="awm003-evb"
-		;;
 	*"BC2")
 		name="bc2"
-		;;
-	*"BR-6425")
-		name="br-6425"
 		;;
 	*"BR-6475nD")
 		name="br-6475nd"
@@ -187,7 +181,7 @@ ramips_board_detect() {
 	*"EX2700")
 		name="ex2700";
 		;;
-	*"EX3700")
+	*"EX3700/EX3800")
 		name="ex3700"
 		;;
 	*"F5D8235 v1")
