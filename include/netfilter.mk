@@ -100,11 +100,6 @@ $(eval $(call nf_add,IPT_EXTRA,CONFIG_NETFILTER_XT_MATCH_QUOTA, $(P_XT)xt_quota)
 
 $(eval $(call nf_add,IPT_FILTER,CONFIG_NETFILTER_XT_MATCH_STRING, $(P_XT)xt_string))
 
-# imq
-
-$(eval $(call nf_add,IPT_IMQ,CONFIG_IP_NF_TARGET_IMQ, $(P_V4)ipt_IMQ))
-$(eval $(call nf_add,IPT_IMQ,CONFIG_NETFILTER_XT_TARGET_IMQ, $(P_XT)xt_IMQ))
-
 # ipopt
 
 $(eval $(call nf_add,IPT_IPOPT,CONFIG_NETFILTER_XT_MATCH_DSCP, $(P_XT)xt_dscp))
@@ -142,6 +137,15 @@ $(eval $(call nf_add,IPT_IPSEC,CONFIG_IP_NF_MATCH_AH, $(P_V4)ipt_ah))
 $(eval $(call nf_add,IPT_IPSEC,CONFIG_NETFILTER_XT_MATCH_ESP, $(P_XT)xt_esp))
 $(eval $(call nf_add,IPT_IPSEC,CONFIG_NETFILTER_XT_MATCH_POLICY, $(P_XT)xt_policy))
 
+# imq
+$(eval $(call nf_add,IPT_IMQ,CONFIG_IP_NF_TARGET_IMQ, $(P_V4)ipt_IMQ))
+$(eval $(call nf_add,IPT_IMQ,CONFIG_NETFILTER_XT_TARGET_IMQ, $(P_XT)xt_IMQ))
+
+# gargoyle netfilter modules
+$(eval $(call nf_add,IPT_BANDWIDTH,CONFIG_IP_NF_MATCH_BANDWIDTH, $(P_V4)ipt_bandwidth))
+$(eval $(call nf_add,IPT_TIMERANGE,CONFIG_IP_NF_MATCH_TIMERANGE, $(P_V4)ipt_timerange))
+$(eval $(call nf_add,IPT_WEBMON,CONFIG_IP_NF_MATCH_WEBMON, $(P_V4)ipt_webmon))
+$(eval $(call nf_add,IPT_WEBURL,CONFIG_IP_NF_MATCH_WEBURL, $(P_V4)ipt_weburl))
 
 # IPv6
 
@@ -162,6 +166,7 @@ $(eval $(if $(NF_KMOD),,$(call nf_add,IPT_IPV6,CONFIG_IP6_NF_IPTABLES, ip6t_icmp
 
 $(eval $(call nf_add,IPT_IPV6,CONFIG_IP6_NF_TARGET_LOG, $(P_V6)ip6t_LOG))
 $(eval $(call nf_add,IPT_IPV6,CONFIG_IP6_NF_TARGET_REJECT, $(P_V6)ip6t_REJECT))
+$(eval $(call nf_add,IPT_IPV6,CONFIG_IP6_NF_TARGET_IMQ, $(P_V6)ip6t_IMQ))
 
 # ipv6 extra
 $(eval $(call nf_add,IPT_IPV6_EXTRA,CONFIG_IP6_NF_MATCH_IPV6HEADER, $(P_V6)ip6t_ipv6header))
@@ -171,7 +176,6 @@ $(eval $(call nf_add,IPT_IPV6_EXTRA,CONFIG_IP6_NF_MATCH_EUI64, $(P_V6)ip6t_eui64
 $(eval $(call nf_add,IPT_IPV6_EXTRA,CONFIG_IP6_NF_MATCH_OPTS, $(P_V6)ip6t_hbh))
 $(eval $(call nf_add,IPT_IPV6_EXTRA,CONFIG_IP6_NF_MATCH_FRAG, $(P_V6)ip6t_frag))
 $(eval $(call nf_add,IPT_IPV6_EXTRA,CONFIG_IP6_NF_MATCH_RT, $(P_V6)ip6t_rt))
-$(eval $(call nf_add,IPT_IPV6,CONFIG_IP6_NF_TARGET_IMQ, $(P_V6)ip6t_IMQ))
 
 # nat
 
@@ -364,6 +368,10 @@ IPT_BUILTIN += $(IPT_CLUSTER-y)
 IPT_BUILTIN += $(IPT_CLUSTERIP-y)
 IPT_BUILTIN += $(IPT_IPSEC-y)
 IPT_BUILTIN += $(IPT_IPV6-y) $(IPT_IPV6-m)
+IPT_BUILTIN += $(IPT_BANDWIDTH-y)
+IPT_BUILTIN += $(IPT_TIMERANGE-y)
+IPT_BUILTIN += $(IPT_WEBMON-y)
+IPT_BUILTIN += $(IPT_WEBURL-y)
 IPT_BUILTIN += $(NF_NAT-y)
 IPT_BUILTIN += $(NF_NAT6-y)
 IPT_BUILTIN += $(IPT_NAT-y)
