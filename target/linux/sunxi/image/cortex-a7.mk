@@ -28,6 +28,16 @@ endef
 TARGET_DEVICES += sun7i-a20-olinuxino-lime2
 
 
+define Device/sun7i-a20-olinuxino-lime2-emmc
+  DEVICE_TITLE:=Olimex A20-OLinuXino-LIME2-eMMC
+  DEVICE_PACKAGES:=kmod-ata-core kmod-ata-sunxi kmod-rtc-sunxi kmod-usb-hid
+  SUPPORTED_DEVICES:=olimex,a20-olinuxino-lime2-emmc
+  SUNXI_DTS:=sun7i-a20-olinuxino-lime2-emmc
+endef
+
+TARGET_DEVICES += sun7i-a20-olinuxino-lime2-emmc
+
+
 define Device/sun7i-a20-olinuxino-micro
   DEVICE_TITLE:=Olimex A20-Olinuxino Micro
   DEVICE_PACKAGES:=kmod-ata-core kmod-ata-sunxi kmod-sun4i-emac kmod-rtc-sunxi
@@ -96,6 +106,16 @@ define Device/sun6i-a31-m9
 endef
 
 TARGET_DEVICES += sun6i-a31-m9
+
+
+define Device/sun8i-h2-plus-orangepi-r1
+  DEVICE_TITLE:=Xunlong Orange Pi R1
+  DEVICE_PACKAGES:=kmod-rtc-sunxi kmod-usb-net kmod-usb-net-rtl8152
+  SUPPORTED_DEVICES:=xunlong,orangepi-r1
+  SUNXI_DTS:=sun8i-h2-plus-orangepi-r1
+endef
+
+TARGET_DEVICES += sun8i-h2-plus-orangepi-r1
 
 
 define Device/sun8i-h3-orangepi-plus

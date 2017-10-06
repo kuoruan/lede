@@ -49,6 +49,12 @@ define U-Boot/A20-OLinuXino-Lime2
   BUILD_DEVICES:=sun7i-a20-olinuxino-lime2
 endef
 
+define U-Boot/A20-OLinuXino-Lime2-eMMC
+  BUILD_SUBTARGET:=cortexa7
+  NAME:=A20 OLinuXino LIME2 eMMC
+  BUILD_DEVICES:=sun7i-a20-olinuxino-lime2-emmc
+endef
+
 define U-Boot/A20-OLinuXino_MICRO
   BUILD_SUBTARGET:=cortexa7
   NAME:=A20 OLinuXino MICRO
@@ -120,6 +126,12 @@ define U-Boot/Lamobo_R1
   BUILD_DEVICES:=sun7i-a20-lamobo-r1
 endef
 
+define U-Boot/orangepi_r1
+  BUILD_SUBTARGET:=cortexa7
+  NAME:=Orange Pi R1 (H2+)
+  BUILD_DEVICES:=sun8i-h2-plus-orangepi-r1
+endef
+
 define U-Boot/orangepi_plus
   BUILD_SUBTARGET:=cortexa7
   NAME:=Orange Pi Plus (H3)
@@ -145,6 +157,7 @@ UBOOT_TARGETS := \
 	A13-OLinuXino \
 	A20-OLinuXino-Lime \
 	A20-OLinuXino-Lime2 \
+	A20-OLinuXino-Lime2-eMMC \
 	A20-OLinuXino_MICRO \
 	Bananapi \
 	Bananapro \
@@ -157,6 +170,7 @@ UBOOT_TARGETS := \
 	Linksprite_pcDuino \
 	Linksprite_pcDuino3 \
 	Lamobo_R1 \
+	orangepi_r1 \
 	orangepi_plus \
 	pangolin \
 	pine64_plus
