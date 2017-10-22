@@ -11,16 +11,16 @@
         dns-protocol.h radv-protocol.h ip6addr.h
 --- a/src/dnsmasq.h
 +++ b/src/dnsmasq.h
-@@ -1133,7 +1133,7 @@ size_t setup_reply(struct dns_header *he
- 		   unsigned long local_ttl);
- int extract_addresses(struct dns_header *header, size_t qlen, char *namebuff, 
- 		      time_t now, char **ipsets, int is_sign, int checkrebind,
--		      int no_cache, int secure, int *doctored);
-+		      int no_cache, int secure, int *doctored, int check_inlist);
+@@ -1139,7 +1139,7 @@ size_t setup_reply(struct dns_header *he
+ 		   unsigned long ttl);
+ int extract_addresses(struct dns_header *header, size_t qlen, char *name,
+ 		      time_t now, char **ipsets, int is_sign, int check_rebind,
+-		      int no_cache_dnssec, int secure, int *doctored);
++		      int no_cache_dnssec, int secure, int *doctored, int check_inlist);
  size_t answer_request(struct dns_header *header, char *limit, size_t qlen,  
  		      struct in_addr local_addr, struct in_addr local_netmask, 
  		      time_t now, int ad_reqd, int do_bit, int have_pseudoheader);
-@@ -1556,3 +1556,23 @@ int check_source(struct dns_header *head
+@@ -1566,3 +1566,23 @@ int check_source(struct dns_header *head
  /* arp.c */
  int find_mac(union mysockaddr *addr, unsigned char *mac, int lazy, time_t now);
  int do_arp_script_run(void);
@@ -116,7 +116,7 @@
  	  header->id = htons(forward->orig_id);
  	  header->hb4 |= HB4_RA; /* recursion if available */
  #ifdef HAVE_DNSSEC
-@@ -1962,7 +1974,7 @@ unsigned char *tcp_request(int confd, ti
+@@ -1972,7 +1984,7 @@ unsigned char *tcp_request(int confd, ti
  
  		      m = process_reply(header, now, last_server, (unsigned int)m, 
  					option_bool(OPT_NO_REBIND) && !norebind, no_cache_dnssec, cache_secure, bogusanswer,
@@ -156,7 +156,7 @@
        
 --- a/src/rfc1035.c
 +++ b/src/rfc1035.c
-@@ -582,7 +582,7 @@ static int find_soa(struct dns_header *h
+@@ -584,7 +584,7 @@ static int find_soa(struct dns_header *h
     expired and cleaned out that way. 
     Return 1 if we reject an address because it look like part of dns-rebinding attack. */
  int extract_addresses(struct dns_header *header, size_t qlen, char *name, time_t now, 
@@ -165,7 +165,7 @@
  {
    unsigned char *p, *p1, *endrr, *namep;
    int i, j, qtype, qclass, aqtype, aqclass, ardlen, res, searched_soa = 0;
-@@ -677,7 +677,6 @@ int extract_addresses(struct dns_header
+@@ -679,7 +679,6 @@ int extract_addresses(struct dns_header
  			    return 0; /* looped CNAMES, or DNSSEC, which we can't cache. */
  			  goto cname_loop;
  			}
@@ -173,7 +173,7 @@
  		      cache_insert(name, &addr, now, cttl, name_encoding | secflag | F_REVERSE);
  		      found = 1; 
  		    }
-@@ -806,7 +805,10 @@ int extract_addresses(struct dns_header
+@@ -808,7 +807,10 @@ int extract_addresses(struct dns_header
  			    }
  			}
  #endif
