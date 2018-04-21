@@ -8,9 +8,9 @@ PKG_LICENSE_FILES:=
 
 PKG_SOURCE_URL:=https://github.com/openwrt/mt76
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_DATE:=2017-10-12
-PKG_SOURCE_VERSION:=37654d704772512065cd28b007342758c2a0f14a
-PKG_MIRROR_HASH:=487ca40ed4e1ffe015dabc76c0a84782602d84f5b08c9c86cc6c892cb499623b
+PKG_SOURCE_DATE:=2018-04-18
+PKG_SOURCE_VERSION:=e2eedc9229dad9b9d653ad0abb4f3571d1676148
+PKG_MIRROR_HASH:=5bf8879814ffb498228a070e5f8ebedd06cbf4c286a7875e8616d26f154be6ac
 
 PKG_MAINTAINER:=Felix Fietkau <nbd@nbd.name>
 PKG_BUILD_PARALLEL:=1
@@ -39,7 +39,6 @@ define KernelPackage/mt76-core
   TITLE:=MediaTek MT76xx wireless driver
   FILES:=\
 	$(PKG_BUILD_DIR)/mt76.ko
-  AUTOLOAD:=$(call AutoLoad,50,mac80211 mt76)
 endef
 
 define KernelPackage/mt76x2
@@ -48,7 +47,7 @@ define KernelPackage/mt76x2
   DEPENDS+=+kmod-mt76-core
   FILES:=\
 	$(PKG_BUILD_DIR)/mt76x2e.ko
-  AUTOLOAD:=$(call AutoLoad,51,mt76x2e)
+  AUTOLOAD:=$(call AutoProbe,mt76x2e)
 endef
 
 define KernelPackage/mt7603
@@ -57,7 +56,7 @@ define KernelPackage/mt7603
   DEPENDS+=+kmod-mt76-core
   FILES:=\
 	$(PKG_BUILD_DIR)/mt7603e.ko
-  AUTOLOAD:=$(call AutoLoad,51,mt7603e)
+  AUTOLOAD:=$(call AutoProbe,mt7603e)
 endef
 
 NOSTDINC_FLAGS = \
@@ -75,8 +74,7 @@ endif
 
 define Build/Compile
 	+$(MAKE) $(PKG_JOBS) -C "$(LINUX_DIR)" \
-		ARCH="$(LINUX_KARCH)" \
-		CROSS_COMPILE="$(TARGET_CROSS)" \
+		$(KERNEL_MAKE_FLAGS) \
 		SUBDIRS="$(PKG_BUILD_DIR)" \
 		NOSTDINC_FLAGS="$(NOSTDINC_FLAGS)" \
 		modules
