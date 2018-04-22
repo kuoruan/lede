@@ -1,6 +1,6 @@
 --- a/block.c
 +++ b/block.c
-@@ -566,25 +566,6 @@ static void cache_load(int mtd)
+@@ -583,25 +583,6 @@ static void cache_load(int mtd)
  	_cache_load("/dev/mapper/*");
  }
  
@@ -26,7 +26,7 @@
  static struct probe_info* find_block_info(char *uuid, char *label, char *path)
  {
  	struct probe_info *pr = NULL;
-@@ -1525,7 +1506,6 @@ static int main_umount(int argc, char **
+@@ -1659,7 +1640,6 @@ static int main_umount(int argc, char **
  
  static int main_detect(int argc, char **argv)
  {
@@ -34,7 +34,7 @@
  
  	cache_load(0);
  	printf("config 'global'\n");
-@@ -1535,8 +1515,6 @@ static int main_detect(int argc, char **
+@@ -1669,8 +1649,6 @@ static int main_detect(int argc, char **
  	printf("\toption\tauto_mount\t'1'\n");
  	printf("\toption\tdelay_root\t'5'\n");
  	printf("\toption\tcheck_fs\t'0'\n\n");

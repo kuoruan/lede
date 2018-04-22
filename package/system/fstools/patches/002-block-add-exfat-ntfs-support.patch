@@ -1,6 +1,6 @@
 --- a/block.c
 +++ b/block.c
-@@ -241,6 +241,55 @@ static void parse_mount_options(struct m
+@@ -254,6 +254,55 @@ static void parse_mount_options(struct m
  	free(optstr);
  }
  
@@ -56,7 +56,7 @@
  static int mount_add(struct uci_section *s)
  {
  	struct blob_attr *tb[__MOUNT_MAX] = { 0 };
-@@ -530,6 +579,7 @@ static int print_block_uci(struct probe_
+@@ -547,6 +596,7 @@ static int print_block_uci(struct probe_
  		printf("\toption\tuuid\t'%s'\n", pr->uuid);
  	else
  		printf("\toption\tdevice\t'%s'\n", pr->dev);
@@ -64,7 +64,7 @@
  	printf("\toption\tenabled\t'0'\n\n");
  
  	return 0;
-@@ -855,8 +905,34 @@ static int handle_mount(const char *sour
+@@ -878,8 +928,34 @@ static int handle_mount(const char *sour
  	size_t mount_opts_len;
  	char *mount_opts = NULL, *ptr;
  
