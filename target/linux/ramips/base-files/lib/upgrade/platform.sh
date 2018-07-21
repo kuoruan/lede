@@ -31,6 +31,7 @@ platform_check_image() {
 	awm002-evb-4M|\
 	awm002-evb-8M|\
 	bc2|\
+	bocco|\
 	broadway|\
 	c108|\
 	carambola|\
@@ -53,6 +54,7 @@ platform_check_image() {
 	dir-810l|\
 	duzun-dm06|\
 	e1700|\
+	elecom,wrc-1167ghbk2-s|\
 	esr-9753|\
 	ew1200|\
 	ex2700|\
@@ -61,7 +63,7 @@ platform_check_image() {
 	firewrt|\
 	fonera20n|\
 	freestation5|\
-	gb-pc1|\
+	gnubee,gb-pc1|\
 	gnubee,gb-pc2|\
 	gl-mt300a|\
 	gl-mt300n|\
@@ -74,11 +76,14 @@ platform_check_image() {
 	hpm|\
 	ht-tm02|\
 	hw550-3g|\
+	iodata,wn-ax1167gr|\
+	iodata,wn-gx300gr|\
 	ip2202|\
 	jhr-n805r|\
 	jhr-n825r|\
 	jhr-n926r|\
 	k2p|\
+	kimax,u35wf|\
 	kn|\
 	kn_rc|\
 	kn_rf|\
@@ -119,6 +124,7 @@ platform_check_image() {
 	oy-0001|\
 	pbr-d1|\
 	pbr-m1|\
+	phicomm,k2g|\
 	psg1208|\
 	psg1218a|\
 	psg1218b|\
@@ -165,6 +171,7 @@ platform_check_image() {
 	w2914nsv2|\
 	w306r-v20|\
 	w502u|\
+	ravpower,wd03|\
 	wf-2881|\
 	whr-1166d|\
 	whr-300hp2|\
@@ -172,7 +179,8 @@ platform_check_image() {
 	whr-g300n|\
 	widora,neo-16m|\
 	widora,neo-32m|\
-	witi|\
+	mqmaker,witi-256m|\
+	mqmaker,witi-512m|\
 	wizfi630a|\
 	wl-330n|\
 	wl-330n3g|\
@@ -220,6 +228,7 @@ platform_check_image() {
 	zbt-wr8305rt|\
 	zorlik,zl5900v2|\
 	zte-q7|\
+	zyxel,keenetic-extra-ii|\
 	youku-yk1)
 		[ "$magic" != "27051956" ] && {
 			echo "Invalid image type."
@@ -247,10 +256,13 @@ platform_check_image() {
 	c20i|\
 	c50|\
 	mr200|\
+	tplink,c2-v1|\
 	tplink,c20-v1|\
 	tplink,c20-v4|\
 	tplink,c50-v3|\
 	tplink,tl-mr3420-v5|\
+	tplink,tl-wa801nd-v5|\
+	tplink,tl-wr842n-v5|\
 	tplink,tl-wr902ac-v3|\
 	tl-wr840n-v4|\
 	tl-wr840n-v5|\
@@ -289,6 +301,8 @@ platform_check_image() {
 		nand_do_platform_check "$board" "$1"
 		return $?;
 		;;
+	mikrotik,rbm11g|\
+	mikrotik,rbm33g|\
 	re350-v1)
 		[ "$magic" != "01000000" ] && {
 			echo "Invalid image type."
@@ -308,6 +322,17 @@ platform_check_image() {
 
 	echo "Sysupgrade is not yet supported on $board."
 	return 1
+}
+
+platform_pre_upgrade() {
+	local board=$(board_name)
+
+	case "$board" in
+	mikrotik,rbm11g|\
+	mikrotik,rbm33g)
+		[ -z "$(rootfs_type)" ] && mtd erase firmware
+		;;
+	esac
 }
 
 platform_nand_pre_upgrade() {

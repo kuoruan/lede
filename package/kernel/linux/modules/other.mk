@@ -411,7 +411,8 @@ $(eval $(call KernelPackage,rfkill))
 define KernelPackage/softdog
   SUBMENU:=$(OTHER_MENU)
   TITLE:=Software watchdog driver
-  KCONFIG:=CONFIG_SOFT_WATCHDOG
+  KCONFIG:=CONFIG_SOFT_WATCHDOG \
+  	CONFIG_SOFT_WATCHDOG_PRETIMEOUT=n
   FILES:=$(LINUX_DIR)/drivers/$(WATCHDOG_DIR)/softdog.ko
   AUTOLOAD:=$(call AutoLoad,50,softdog,1)
 endef
@@ -697,6 +698,22 @@ endef
 $(eval $(call KernelPackage,serial-8250))
 
 
+define KernelPackage/serial-8250-exar
+  SUBMENU:=$(OTHER_MENU)
+  TITLE:=Exar 8250 UARTs
+  KCONFIG:= CONFIG_SERIAL_8250_EXAR
+  FILES:=$(LINUX_DIR)/drivers/tty/serial/8250/8250_exar.ko
+  AUTOLOAD:=$(call AutoProbe,8250 8250_base 8250_exar)
+  DEPENDS:=+kmod-serial-8250
+endef
+
+define KernelPackage/serial-8250-exar/description
+ Kernel module for Exar serial ports
+endef
+
+$(eval $(call KernelPackage,serial-8250-exar))
+
+
 define KernelPackage/regmap
   SUBMENU:=$(OTHER_MENU)
   TITLE:=Generic register map support
@@ -707,11 +724,15 @@ define KernelPackage/regmap
 	   CONFIG_REGMAP_I2C \
 	   CONFIG_SPI=y
   FILES:= \
-	$(LINUX_DIR)/drivers/base/regmap/regmap-core.ko \
 	$(LINUX_DIR)/drivers/base/regmap/regmap-i2c.ko \
 	$(LINUX_DIR)/drivers/base/regmap/regmap-mmio.ko \
 	$(if $(CONFIG_SPI),$(LINUX_DIR)/drivers/base/regmap/regmap-spi.ko)
   AUTOLOAD:=$(call AutoLoad,21,regmap-core regmap-i2c regmap-mmio regmap-spi)
+  ifeq ($(strip $(CONFIG_EXTERNAL_KERNEL_TREE)),"")
+   ifeq ($(strip $(CONFIG_KERNEL_GIT_CLONE_URI)),"")
+    FILES += $(LINUX_DIR)/drivers/base/regmap/regmap-core.ko
+   endif
+  endif
 endef
 
 define KernelPackage/regmap/description
@@ -878,6 +899,22 @@ endef
 
 $(eval $(call KernelPackage,random-omap))
 
+define KernelPackage/random-tpm
+  SUBMENU:=$(OTHER_MENU)
+  TITLE:=Hardware Random Number Generator TPM support
+  KCONFIG:=CONFIG_HW_RANDOM_TPM
+  FILES:=$(LINUX_DIR)/drivers/char/hw_random/tpm-rng.ko
+  DEPENDS:= +kmod-random-core +kmod-tpm
+  AUTOLOAD:=$(call AutoProbe,tpm-rng)
+endef
+
+define KernelPackage/random-tpm/description
+ Kernel module for the Random Number Generator
+ in the Trusted Platform Module.
+endef
+
+$(eval $(call KernelPackage,random-tpm))
+
 define KernelPackage/thermal
   SUBMENU:=$(OTHER_MENU)
   TITLE:=Generic Thermal sysfs driver
@@ -890,6 +927,7 @@ define KernelPackage/thermal
 	CONFIG_THERMAL_DEFAULT_GOV_STEP_WISE=y \
 	CONFIG_THERMAL_DEFAULT_GOV_FAIR_SHARE=n \
 	CONFIG_THERMAL_DEFAULT_GOV_USER_SPACE=n \
+	CONFIG_THERMAL_EMERGENCY_POWEROFF_DELAY_MS=0 \
 	CONFIG_THERMAL_GOV_FAIR_SHARE=n \
 	CONFIG_THERMAL_GOV_STEP_WISE=y \
 	CONFIG_THERMAL_GOV_USER_SPACE=n \
